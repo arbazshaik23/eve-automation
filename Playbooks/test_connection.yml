@@ -1,0 +1,17 @@
+---
+- name: Test Connection to EVE-NG Lab
+  hosts: eve_lab
+  gather_facts: no
+
+  tasks:
+    - name: Get Ansible Reachability 
+      cisco.ios.ios_command:
+        commands:
+          - ping 10.10.116.6 repeat 10
+      register: output
+
+    - name: Print the Results
+      debug:
+        var: output.stdout_lines
+
+

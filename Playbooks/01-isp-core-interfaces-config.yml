@@ -1,0 +1,23 @@
+---
+- name: Configure All Core Routers
+  hosts: isp_core_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Ensure Interfaces are Unshut (Enabled)
+      cisco.ios.ios_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            enabled: true 
+        state: merged
+      loop: "{{ my_interfaces }}"
+
+    - name: Configure L3 Interfaces (IP Addresses)
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            ipv4:
+              - address: "{{ item.ip }} {{ item.mask }}"
+        state: merged
+      loop: "{{ my_interfaces }}"

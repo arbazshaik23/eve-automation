@@ -1,0 +1,40 @@
+---
+
+- name: 02 - Configure ISIS 
+  hosts: isp_test_routers
+  gather_facts: false
+  connection: network_cli
+
+
+  tasks:
+    - name: Configure ISIS on ISP Core Routers
+      cisco.ios.ios_config:
+        lines:
+          - "router isis {{ isis_process_id }}"
+          - "net {{ isis_net }}"
+          - "metric-style wide"
+          - "is-type level-2-only"
+          - "log-adjacency-changes"
+
+    - name: Enable ISIS on specific Interfaces
+      cisco.ios.ios_isis_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            process_id: "{{ isis_process_id }}"
+        state: merged
+      loop: "{{ my_interfaces }}"
+      when: item.isis_enabled == true
+
+    - name: Wait For IS-IS Adjacncy To Form
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Verify ISIS Adjacency
+      cisco.ios.ios_command:
+        lines:
+          - "do show isis neighbors"
+      register: isis_output
+
+    - name: Display IS-IS Neighbors
+      ansible.builtin.debug:
+        msg: "{{ isis_output.stdout_lines }}"
