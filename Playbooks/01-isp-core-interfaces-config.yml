@@ -9,8 +9,7 @@
       cisco.ios.ios_interfaces:
         config:
           - name: "{{ item.name }}"
-            enabled: true 
-        state: merged
+            enabled: true
       loop: "{{ my_interfaces }}"
 
     - name: Configure L3 Interfaces (IP Addresses)
@@ -21,3 +20,4 @@
               - address: "{{ item.ip }} {{ item.mask }}"
         state: merged
       loop: "{{ my_interfaces }}"
+      when: item.ip is defined and item.mask is defined
