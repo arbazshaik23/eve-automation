@@ -18,11 +18,11 @@ my_interfaces:
   - name: GigabitEthernet3
     ip: 10.10.24.2
     mask: 255.255.255.0
-    isis_enabled: false
+    isis_enabled: true
   - name: GigabitEthernet4
     ip: 10.10.23.2
     mask: 255.255.255.0
-    isis_enabled: false
+    isis_enabled: true
 
 isis_net: "49.0001.0000.0000.0002.00"
 isis_process_id: 100

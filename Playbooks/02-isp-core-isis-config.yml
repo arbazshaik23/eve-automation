@@ -13,12 +13,14 @@
           - "metric-style wide"
           - "is-type level-2-only"
           - "log-adjacency-changes"
+        match: line
 
     - name: Enable ISIS on specific Interfaces
       cisco.ios.ios_config:
         parents: "interface {{ item.name }}"
         lines:
           - "ip router isis {{ isis_process_id }}"
+        match: line
       loop: "{{ my_interfaces }}"
       when: item.isis_enabled | bool
 
