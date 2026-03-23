@@ -17,10 +17,10 @@
           - "log-adjacency-changes"
 
     - name: Enable ISIS on specific Interfaces
-      cisco.ios.ios_isis_interfaces:
-        config:
-          - name: "{{ item.name }}"
-            process_id: "{{ isis_process_id }}"
+      cisco.ios.ios_config:
+        lines:
+          - "ip router isis {{ isis_process_id }}"
+        parents: "interface {{ item.name }}"
         state: merged
       loop: "{{ my_interfaces }}"
       when: item.isis_enabled == true
