@@ -1,8 +1,8 @@
 ---
 - name: Write Configs to Memory
-- hosts: isp_core_routers
-- gather_facts: false
-- connection: network_cli
+  hosts: isp_core_routers
+  gather_facts: false
+  connection: network_cli
 
   tasks:
    - name: Verify All Configs are Saved
