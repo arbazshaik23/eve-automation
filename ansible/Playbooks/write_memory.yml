@@ -6,9 +6,9 @@
 
   tasks:
    - name: Verify All Configs are Saved
-     cisco.ios.ios.config:
-      lines:
-       - write memory
+     cisco.ios.ios_command:
+      commands:
+       - "write memory"
      register: wr_mem
   
    - name: Display Configs were Saved
