@@ -4,13 +4,13 @@
 - gather_facts: false
 - connection: network_cli
 
- tasks:
-  - name: Verify All Configs are Saved
-    cisco.ios.ios.config:
+  tasks:
+   - name: Verify All Configs are Saved
+     cisco.ios.ios.config:
       lines:
        - write memory
-    register: wr_mem
+     register: wr_mem
   
-  - name: Display Configs were Saved
-    ansible.builtin.debug:
-     var: wr_mem.stdout_lines
+   - name: Display Configs were Saved
+     ansible.builtin.debug:
+      var: wr_mem.stdout_lines
