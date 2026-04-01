@@ -37,3 +37,4 @@
     - name: Display IS-IS Neighbors
       ansible.builtin.debug:
         var: isis_output.stdout_lines
+
