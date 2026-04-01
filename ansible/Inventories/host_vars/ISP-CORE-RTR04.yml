@@ -7,7 +7,6 @@ my_interfaces:
     ip: 4.4.4.4
     mask: 255.255.255.255
     isis_enabled: true
-    sr_prefix_sid: 4
     mpls_enabled: true
   - name: GigabitEthernet1
     ip: 10.10.34.4
