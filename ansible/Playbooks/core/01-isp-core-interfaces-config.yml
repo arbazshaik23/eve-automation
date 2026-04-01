@@ -21,3 +21,13 @@
         state: merged
       loop: "{{ my_interfaces }}"
       when: item.ip is defined and item.mask is defined
+
+    - name: Show output of configure interfaces
+      cisoc.ios.ios_command:
+        commands:
+         - show ip interface brief
+      register: showint
+
+    - name: Print Show Interface Results
+      debug:
+        var: stdout.showint
