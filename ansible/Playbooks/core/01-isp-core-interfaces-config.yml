@@ -30,4 +30,4 @@
 
     - name: Print Show Interface Results
       debug:
-        var: stdout.showint
+        var: showint.stdout_lines
