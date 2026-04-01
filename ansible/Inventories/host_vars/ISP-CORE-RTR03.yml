@@ -8,25 +8,23 @@ my_interfaces:
     mask: 255.255.255.255
     isis_enabled: true
   - name: GigabitEthernet1
-    ip: 32.32.32.3
-    mask: 255.255.255.248
-    isis_enabled: false
-  - name: GigabitEthernet2
     ip: 10.10.34.3
     mask: 255.255.255.0
     isis_enabled: true
-  - name: GigabitEthernet3
+  - name: GigabitEthernet2
     ip: 10.10.13.3
     mask: 255.255.255.0
     isis_enabled: true
-  - name: GigabitEthernet4
+  - name: GigabitEthernet3
     ip: 10.10.24.3
     mask: 255.255.255.0
     isis_enabled: true
-  - name: GigabitEthernet5
+  - name: GigabitEthernet4
     ip: 31.31.31.3
     mask: 255.255.255.248
     isis_enabled: false
+ 
+
 
 isis_net: "49.0001.0000.0000.0003.00"
 isis_process_id: 100
