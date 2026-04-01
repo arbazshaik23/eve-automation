@@ -6,25 +6,32 @@ my_interfaces:
   - name: Loopback0
     ip: 2.2.2.2
     mask: 255.255.255.255
-    isis_enabled: true   
+    isis_enabled: true 
+    sr_prefix_sid: 2  
+    mpls_enabled: true
   - name: GigabitEthernet1
     ip: 10.10.12.2
     mask: 255.255.255.0
     isis_enabled: true  
+    mpls_enabled: true
   - name: GigabitEthernet2
     ip: 10.10.24.2
     mask: 255.255.255.0
     isis_enabled: true
+    mpls_enabled: true
   - name: GigabitEthernet3
     ip: 10.10.23.2
     mask: 255.255.255.0
     isis_enabled: true
+    mpls_enabled: true
   - name: GigabitEthernet4
     ip: 61.62.63.1
     mask: 255.255.255.252
     isis_enabled: false
+    mpls_enabled: false
 
 
 isis_net: "49.0001.0000.0000.0002.00"
 isis_process_id: 100
+sr_node_sid: 2
 

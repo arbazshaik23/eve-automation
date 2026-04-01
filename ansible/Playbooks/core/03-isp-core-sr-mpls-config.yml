@@ -1,0 +1,62 @@
+---
+
+- name: Configure SR-MPLS on all ISP-CORE Routers
+  hosts: isp_core_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Enable globale SR-MPLS and MPLS label range
+      cisco.ios.ios_config:
+        lines:
+          - ip cef
+          - mpls label range 16000 17000
+          - segment-routing mpls
+          - connected-prefix-sid-map
+        parents: []
+        match: line
+
+  tasks:
+    - name: Enable Segment Routing Under IS-IS
+      cisco.ios.ios_config:
+        parents: "router isis {{ isis_process_id }}"
+        lines:
+          - segment-routing mpls
+          - passive-interface loopback0
+        match: line
+    
+    - name: Enable MPLS on core-faceing interfaces
+      cisco.ios.ios_config:
+        parents: "interface {{ item.name }}"
+        lines:
+          - mpls ip
+        match: line
+      loop: "{{ my_interfaces }}"
+      when: item.mpls_enabled | default(false) | bool
+
+    - name: Configure Prefix-SID on Loopbacks
+      cisco.ios.ios_config:
+        parents: " interface {{ item.name }}"
+        lines:
+          - "isis prefix-sid index {{item.sr_predix_sid }}"
+        match: line
+      loop: "{{ my_interfaces }}"
+      when: item.sr_prefix_sid is defined
+
+    - name: Wait for SR database to converge
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Verify IS-IS Neighborship
+      cisco.ios.ios_command:
+        commands:
+          - show isis neighbors
+          - show ip route isis
+          - show mpls forwarding-table
+      register: sr_verify
+
+    - name: Display SR verification output
+      ansible.builtin.debug:
+        var: sr_verify.stdout_lines
+
+      
