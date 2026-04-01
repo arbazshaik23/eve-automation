@@ -16,7 +16,6 @@
         parents: []
         match: line
 
-  tasks:
     - name: Enable Segment Routing Under IS-IS
       cisco.ios.ios_config:
         parents: "router isis {{ isis_process_id }}"
