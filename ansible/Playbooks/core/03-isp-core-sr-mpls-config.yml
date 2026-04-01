@@ -1,30 +1,38 @@
 ---
-
 - name: Configure SR-MPLS on all ISP-CORE Routers
   hosts: isp_core_routers
   gather_facts: false
   connection: network_cli
 
   tasks:
-    - name: Enable globale SR-MPLS and MPLS label range
+    - name: Configure MPLS label range
       cisco.ios.ios_config:
         lines:
-          - ip cef
           - mpls label range 16000 17000
-          - segment-routing mpls
-          - connected-prefix-sid-map
-        parents: []
         match: line
 
-    - name: Enable Segment Routing Under IS-IS
+    - name: Enable global SR-MPLS
+      cisco.ios.ios_config:
+        lines:
+          - segment-routing mpls
+        match: line
+
+    - name: Enable connected-prefix-sid-map under SR-MPLS
+      cisco.ios.ios_config:
+        parents: "segment-routing mpls"
+        lines:
+          - connected-prefix-sid-map
+        match: line
+
+    - name: Enable Segment Routing under IS-IS
       cisco.ios.ios_config:
         parents: "router isis {{ isis_process_id }}"
         lines:
           - segment-routing mpls
-          - passive-interface loopback0
+          - passive-interface Loopback0
         match: line
-    
-    - name: Enable MPLS on core-faceing interfaces
+
+    - name: Enable MPLS on core-facing interfaces
       cisco.ios.ios_config:
         parents: "interface {{ item.name }}"
         lines:
@@ -33,11 +41,11 @@
       loop: "{{ my_interfaces }}"
       when: item.mpls_enabled | default(false) | bool
 
-    - name: Configure Prefix-SID on Loopbacks
+    - name: Configure Prefix-SID on loopbacks
       cisco.ios.ios_config:
-        parents: " interface {{ item.name }}"
+        parents: "interface {{ item.name }}"
         lines:
-          - "isis prefix-sid index {{item.sr_predix_sid }}"
+          - "isis prefix-sid index {{ item.sr_prefix_sid }}"
         match: line
       loop: "{{ my_interfaces }}"
       when: item.sr_prefix_sid is defined
@@ -46,7 +54,7 @@
       ansible.builtin.pause:
         seconds: 10
 
-    - name: Verify IS-IS Neighborship
+    - name: Verify SR-MPLS
       cisco.ios.ios_command:
         commands:
           - show isis neighbors
@@ -57,5 +65,3 @@
     - name: Display SR verification output
       ansible.builtin.debug:
         var: sr_verify.stdout_lines
-
-      
