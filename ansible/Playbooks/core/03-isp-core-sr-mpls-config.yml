@@ -8,7 +8,7 @@
     - name: Configure MPLS label range
       cisco.ios.ios_config:
         lines:
-          - mpls label range 16000 17000
+          - mpls label range 16000 23000
         match: line
 
     - name: Enable global SR-MPLS
@@ -39,7 +39,7 @@
           - mpls ip
         match: line
       loop: "{{ my_interfaces }}"
-      when: item.mpls_enabled | default(false) | bool
+      when: item.mpls_enabled
 
     - name: Configure Prefix-SID on loopbacks
       cisco.ios.ios_config:
