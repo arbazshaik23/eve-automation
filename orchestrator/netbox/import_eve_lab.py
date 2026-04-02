@@ -27,8 +27,12 @@ for file in files:
         if ip_address == "unassigned":
             continue
 
-        iface = create_interface(device, interface_name)
+    iface = create_interface(device, interface_name)
 
-        create_ip(f"{ip_address}/24", iface)  # adjust mask later
+    print(f"Created/found interface {interface_name} (ID: {iface.id}) on {device.name}")
+
+    create_ip(f"{ip_address}/24", iface)
+
+    print(f"Assigned IP {ip_address}/24 to {interface_name}")
 
 print("Import complete")
