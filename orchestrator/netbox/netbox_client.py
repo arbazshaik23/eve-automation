@@ -43,21 +43,30 @@ def create_interface(device, name):
 
 def create_ip(address, interface):
     """
-    NetBox 4.x requires a two-step process:
-      1. Create (or fetch) the IP address object — no assignment yet.
-      2. PATCH the IP to assign it to the interface via assigned_object_*.
-    Combining both steps in a single POST causes a 500 KeyError: 'data'.
+    NetBox 4.x:
+      - Does NOT accept prefix notation (e.g. /24) in the address field on create.
+      - Assignment must be a separate PATCH after creation.
     """
-    # Step 1: check if IP already exists
-    ip = nb.ipam.ip_addresses.get(address=address)
+    # Strip any prefix length before querying or creating
+    bare_ip = address.split("/")[0]
+
+    # Step 1: check if IP already exists (query by bare IP)
+    ip = nb.ipam.ip_addresses.get(address=bare_ip)
 
     if not ip:
-        # Create the IP with NO assignment in the same call
+        # Create with bare IP only — no mask, no assignment
         ip = nb.ipam.ip_addresses.create({
-            "address": address,
+            "address": bare_ip,
             "status": "active"
         })
 
+    # Step 2: assign to interface via PATCH
+    ip.assigned_object_type = "dcim.interface"
+    ip.assigned_object_id = interface.id
+    ip.save()
+
+    return ip
+    
     # Step 2: assign to interface (safe to re-run; overwrites with same values)
     ip.assigned_object_type = "dcim.interface"
     ip.assigned_object_id = interface.id
