@@ -12,7 +12,7 @@ for file in files:
 
     device = get_or_create_device(hostname, site)
 
-    with open(f"/tmp/{file}") as f:
+    with open(f"/root/eve-automation/ansible/Netbox_Data/{file}") as f:
         lines = f.readlines()
 
     for line in lines:
