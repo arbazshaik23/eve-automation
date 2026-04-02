@@ -30,6 +30,8 @@ def create_interface(device, name):
     if iface:
         return iface
 
+    print(f"Creating interface {name} on {device.name}")
+
     iface = nb.dcim.interfaces.create({
         "device": device.id,
         "name": name,
@@ -50,5 +52,4 @@ def create_ip(address, interface):
     })
     return ip
 
-print(f"Creating interface {interface_name} on {device.name}")
 print(f"Assigning {ip_address}/24 to interface ID {iface.id} ({iface.name})")
