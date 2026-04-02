@@ -16,15 +16,22 @@ for file in files:
         lines = f.readlines()
 
     for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
         parts = line.split()
 
+    # Skip header / separator / malformed lines
         if len(parts) < 2:
+            continue
+        if parts[0] == "Interface" or parts[1] == "IP-Address":
             continue
 
         interface_name = parts[0]
         ip_address = parts[1]
 
-        if ip_address == "unassigned":
+        if ip_address.lower() == "unassigned":
             continue
 
         iface = create_interface(device, interface_name)
