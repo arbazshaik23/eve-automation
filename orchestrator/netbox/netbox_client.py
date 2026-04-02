@@ -1,7 +1,7 @@
 import pynetbox
 
 NETBOX_URL = "http://10.10.116.8:8000"
-NETBOX_TOKEN = "Uw89a9kRnYjjp0fG9glWRTHXr7g7QHLmaluVNPWI"
+NETBOX_TOKEN = "l8y9EfMLsh8RIerYYH4t4gF2WDSLPpL1sU26QiEF"
 
 nb = pynetbox.api(NETBOX_URL, token=NETBOX_TOKEN)
 
