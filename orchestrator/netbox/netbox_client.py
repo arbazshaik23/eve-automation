@@ -22,7 +22,7 @@ def get_or_create_device(name, site, role="router"):
         device = nb.dcim.devices.create({
             "name": name,
             "site": site.id,
-            "device_role": 1,
+            "role": 1,          # was "device_role" in NetBox 3.x
             "device_type": 1
         })
     return device
@@ -66,7 +66,7 @@ def create_ip(address, interface):
     ip.save()
 
     return ip
-    
+
     # Step 2: assign to interface (safe to re-run; overwrites with same values)
     ip.assigned_object_type = "dcim.interface"
     ip.assigned_object_id = interface.id
