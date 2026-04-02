@@ -15,4 +15,4 @@
     - name: Save Output Locally
       copy:
         content: "{{ output.stdout[0] }}"
-        dest: "/root/eve-automation/ansible/{{ inventory_hostname }}.txt
+        dest: "/root/eve-automation/ansible/{{ inventory_hostname }}.txt"
