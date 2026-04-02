@@ -37,6 +37,11 @@ for file in files:
         iface = create_interface(device, interface_name)
         print(f"Created/found interface {interface_name} (ID: {iface.id}) on {device.name}")
 
+        # Use prefix from file if present, otherwise default to /24
+        if "/" not in ip_address:
+            ip_address = f"{ip_address}/24"
+        ip = create_ip(ip_address, iface)
+        
         ip = create_ip(f"{ip_address}/24", iface)
         print(f"Assigned/found IP {ip.address} on interface {iface.name}")
 
