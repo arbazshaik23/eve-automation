@@ -36,17 +36,16 @@ def create_interface(device, name):
         "type": "virtual"
     })
     return iface
-
+    
 def create_ip(address, interface):
     ip = nb.ipam.ip_addresses.get(address=address)
     if ip:
         return ip
 
-    return nb.ipam.ip_addresses.create(
-        address=address,
-        status="active",
-        assigned_object_type="dcim.interface",
-        assigned_object_id=interface.id,
-    )
-    ip.save()
+    ip = nb.ipam.ip_addresses.create({
+        "address": address,
+        "status": "active",
+        "assigned_object_type": "dcim.interface",
+        "assigned_object_id": interface.id
+    })
     return ip
