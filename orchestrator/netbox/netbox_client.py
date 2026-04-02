@@ -36,7 +36,7 @@ def create_interface(device, name):
         "type": "virtual"
     })
     return iface
-    
+
 def create_ip(address, interface):
     ip = nb.ipam.ip_addresses.get(address=address)
     if ip:
@@ -49,3 +49,6 @@ def create_ip(address, interface):
         "assigned_object_id": interface.id
     })
     return ip
+
+print(f"Creating interface {interface_name} on {device.name}")
+print(f"Assigning {ip_address}/24 to interface ID {iface.id} ({iface.name})")
