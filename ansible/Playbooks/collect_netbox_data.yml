@@ -1,0 +1,18 @@
+---
+
+- name: Collect Interface Data
+  hosts: isp_core_routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Get Interfaces
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+      register: output
+
+    - name: Save Output Locally
+      copy:
+        content: "{{ output.stdout[0] }}"
+        dest: "/root/eve-automation/ansible/{{ inventory_hostname }}.txt
