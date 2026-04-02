@@ -27,12 +27,14 @@ def get_or_create_device(name, site, role="router"):
 
 def create_interface(device, name):
     iface = nb.dcim.interfaces.get(device_id=device.id, name=name)
-    if not iface:
-        iface = nb.dcim.interfaces.create({
-            "device": device.id,
-            "name": name,
-            "type": "virtual"
-        })
+    if iface:
+        return iface
+
+    iface = nb.dcim.interfaces.create({
+        "device": device.id,
+        "name": name,
+        "type": "virtual"
+    })
     return iface
 
 def create_ip(address, interface):
