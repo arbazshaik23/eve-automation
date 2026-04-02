@@ -20,8 +20,8 @@ def get_or_create_device(name, site, role="router"):
         device = nb.dcim.devices.create({
             "name": name,
             "site": site.id,
-            "device_role": 1,   # adjust later
-            "device_type": 1    # adjust later
+            "device_role": 1,
+            "device_type": 1
         })
     return device
 
@@ -51,5 +51,3 @@ def create_ip(address, interface):
         "assigned_object_id": interface.id
     })
     return ip
-
-print(f"Assigning {ip_address}/24 to interface ID {iface.id} ({iface.name})")

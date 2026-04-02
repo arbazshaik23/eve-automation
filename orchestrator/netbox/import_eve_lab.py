@@ -28,11 +28,9 @@ for file in files:
             continue
 
         iface = create_interface(device, interface_name)
-
         print(f"Created/found interface {interface_name} (ID: {iface.id}) on {device.name}")
 
-        create_ip(f"{ip_address}/24", iface)
-
-        print(f"Assigned IP {ip_address}/24 to {interface_name}")
+        ip = create_ip(f"{ip_address}/24", iface)
+        print(f"Assigned/found IP {ip.address} on interface {iface.name}")
 
 print("Import complete")
