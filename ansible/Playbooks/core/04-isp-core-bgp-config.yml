@@ -8,22 +8,22 @@
   tasks:
     - name: Configure BGP on CE Facing Interfaces
       cisco.ios.ios_config:
-        parents: "router bgp {{ bgp_procces_id }}"
+        parents: "router bgp {{ bgp_process_id }}"
         lines:
           - "neighbor 31.31.31.4 remote-as 200"
           - "network 3.3.3.3 mask 255.255.255.255"
 
-    - name: Wait For IS-IS Adjacency To Form
+    - name: Wait for BGP adjacency to form
       ansible.builtin.pause:
-       seconds: 10
+        seconds: 5
 
-    - name: Verify BGP Neighborship
+    - name: Verify BGP neighborship
       cisco.ios.ios_command:
         commands:
           - "show ip bgp"
           - "show ip bgp summary"
       register: show_bgp
 
-    - name: show command output
+    - name: Show command output
       ansible.builtin.debug:
-        var: show_bpg.stdout_lines
+        var: show_bgp.stdout_lines
