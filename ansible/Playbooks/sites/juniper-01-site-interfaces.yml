@@ -22,7 +22,7 @@
       juniper.device.junos_command:
         commands:
           - show interfaces terse
-          - show interfaces description
+          - show interfaces descriptions
       register: show_junos
 
     - name: print output of show commands
