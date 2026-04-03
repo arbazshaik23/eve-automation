@@ -15,7 +15,7 @@
 
     - name: wait for bgp to form
       ansible.builtin.pause:
-        seconds: 10
+        seconds: 5
 
     - name: verify that bgp neighborship established
       juniper.device.junos_command:
