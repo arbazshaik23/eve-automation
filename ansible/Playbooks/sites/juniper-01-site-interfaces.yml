@@ -18,11 +18,6 @@
             description: Uplink to Management Switch
             enabled: true
 
-    - name: commit configuration
-      juniper.device.junos_config:
-        config:
-          - commit
-
     - name: verify interface config
       juniper.device.junos_command:
         commands:
