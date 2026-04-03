@@ -1,0 +1,29 @@
+---
+
+name: Configure BGP on ISP-PE Routers
+hosts: cisco_bgp
+gather_facts: false
+connection_type: network_cli
+
+  tasks:
+    - name: Configure BGP on CE Facing Interfaces
+      cisco.ios.ios_config:
+        parents: "router bgp {{ bgp_procces_id }}"
+        lines:
+          - "neighbor 31.31.31.4 remote-as 200"
+          - "network 3.3.3.3 mask 255.255.255.255"
+    
+    - name: Wait For IS-IS Adjacency To Form
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Verify BGP Neighborship
+      cisco.ios.ios_command:
+        commands:
+          - "show ip bgp"
+          - "show ip bgp summary"
+      register: show_bgp
+
+    - name: show command output
+      ansible.builtin.debug:
+        var: show_bpg.stdout_lines

@@ -28,6 +28,7 @@ my_interfaces:
     mask: 255.255.255.248
     isis_enabled: false
     mpls_enabled: false
+    bgp_enabled: true
  
 
 
@@ -35,3 +36,4 @@ isis_net: "49.0001.0000.0000.0003.00"
 isis_process_id: 100
 sr_node_sid: 3
 
+bgp_process_id: 100
