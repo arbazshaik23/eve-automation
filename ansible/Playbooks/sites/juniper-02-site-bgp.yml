@@ -19,6 +19,11 @@
           - set policy-options policy-statement ADV term 1 from protocol direct
           - set policy-options policy-statement ADV term 1 then accept
 
+    - name: apply policy-options for bgp router adv
+      juniper.device.junos_config:
+        lines:
+          - set protocols bgp group NEW export ADV
+
     - name: wait for bgp to form
       ansible.builtin.pause:
         seconds: 5
