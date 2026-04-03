@@ -27,4 +27,4 @@
 
     - name: print output of show commands
       ansible.builtin.debug:
-        var: show_junos.stdout.lines
+        var: show_junos.stdout_lines
