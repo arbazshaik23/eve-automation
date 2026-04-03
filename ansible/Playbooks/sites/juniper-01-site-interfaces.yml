@@ -1,0 +1,30 @@
+---
+
+- name: Configure Interfaces on Site-A-Red-RTR01
+  hosts: vmx_bgp
+  gather_facts: false
+
+  tasks:
+    - name: Interface Config
+      juniper.device.junos_interfaces:
+        config:
+          - name: lo0
+            description: Primary Loopback
+            enabled: true 
+          - name: ge-0/0/0
+            description: Uplink to ISP-CORE-RTR03
+            enabled: true
+          - name: ge-0/0/4
+            description: Uplink to Management Switch
+            enabled: true
+
+    - name: verify interface config
+      juniper.device.junos_command:
+        commands:
+          - show interfaces terse
+          - show interfaces description
+      register: show_junos
+
+    - name: print output of show commands
+      ansible.builtin.debug:
+        var: show_junos.stdout.lines

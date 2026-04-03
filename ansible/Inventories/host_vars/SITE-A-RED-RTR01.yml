@@ -1,0 +1,6 @@
+---
+
+my_interfaces:
+ - name: Lo0
+ - ip: 11.11.11.11
+ - 
