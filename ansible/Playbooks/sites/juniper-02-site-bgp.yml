@@ -1,0 +1,29 @@
+---
+
+- name: configure juniper site-a-red-rtr01 for bgp
+  hosts: vmx_bgp
+  gather_facts: false
+
+  tasks:
+    - name: configure outsite interface for bgp
+      juniper.device.junos_config:
+        lines: 
+          - set routing-options autonomous-system {{ local_as }}
+          - set protocols bgp group NEW type external
+          - set protocols bgp group NEW peer-as {{ peer_as }}
+          - set protocols bgp group NEW neighbor {{ neighbor_ip }}
+
+    - name: wait for bgp to form
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: verify that bgp neighborship established
+      juniper.device.junos_command:
+        commands:
+          - show bpg summary
+      register: bgp_output
+
+    - name: display bgp show output
+      debug:
+        var: bgp_output.stdout_lines
+
