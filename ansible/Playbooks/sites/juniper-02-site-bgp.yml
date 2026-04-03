@@ -20,7 +20,7 @@
     - name: verify that bgp neighborship established
       juniper.device.junos_command:
         commands:
-          - show bpg summary
+          - show bgp summary
       register: bgp_output
 
     - name: display bgp show output
