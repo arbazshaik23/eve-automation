@@ -14,4 +14,4 @@
     - name: Save Output Locally
       copy:
         content: "{{ output.stdout[0] }}"
-        dest: "/root/eve-automation/ansible/Netbox_Data {{ inventory_hostname }}.txt"
+        dest: "/root/eve-automation/ansible/Netbox_Data/ {{ inventory_hostname }}.txt"
