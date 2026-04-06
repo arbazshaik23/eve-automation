@@ -1,0 +1,17 @@
+---
+
+- name: Collect Interface Data
+  hosts: vmx_bgp
+  gather_facts: false
+
+  tasks:
+    - name: Get Interfaces
+      juniper.device.junos_command:
+        commands:
+          - show interfaces terse
+      register: output
+
+    - name: Save Output Locally
+      copy:
+        content: "{{ output.stdout[0] }}"
+        dest: "/root/eve-automation/ansible/{{ inventory_hostname }}.txt"
