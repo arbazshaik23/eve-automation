@@ -1,0 +1,63 @@
+---
+- name: Configure SNMP on ISP Core Routers
+  hosts: isp_core_routers
+  gather_facts: false
+  connection: network_cli
+
+  vars:
+    snmp_view: SNMP-RO
+    snmp_group: SNMPv3-RO
+    snmp_user: snmpuser
+    snmp_location: EVE-NG-LAB
+    snmp_contact: netops@lab.local
+    snmp_nms_host: 10.10.116.8
+    snmp_acl: SNMP-MANAGERS
+
+  tasks:
+    - name: Configure SNMP ACL for poller
+      cisco.ios.ios_config:
+        lines:
+          - permit {{ snmp_nms_host }}
+        parents: ip access-list standard {{ snmp_acl }}
+
+    - name: Configure SNMP view
+      cisco.ios.ios_config:
+        lines:
+          - snmp-server enable
+          - snmp-server view {{ snmp_view }} iso included
+
+    - name: Configure SNMP group
+      cisco.ios.ios_config:
+        lines:
+          - snmp-server group {{ snmp_group }} v3 priv read {{ snmp_view }} access {{ snmp_acl }}
+
+    - name: Create SNMP user
+      cisco.ios.ios_config:
+        lines:
+          - snmp-server user {{ snmp_user }} {{ snmp_group }} v3 auth sha256 {{ snmp_auth_pass }} priv aes 256 {{ snmp_priv_pass }}
+
+    - name: Configure SNMP metadata
+      cisco.ios.ios_config:
+        lines:
+          - snmp-server location {{ snmp_location }}
+          - snmp-server contact {{ snmp_contact }}
+
+    - name: Enable SNMP traps
+      cisco.ios.ios_config:
+        lines:
+          - snmp-server enable traps
+          - snmp-server host {{ snmp_nms_host }} version 3 priv {{ snmp_user }}
+
+    - name: Verify SNMP configuration
+      cisco.ios.ios_command:
+        commands:
+          - show snmp user
+          - show snmp group
+          - show snmp view
+          - show running-config | include snmp-server host
+          - show running-config | include snmp-server location
+      register: showout
+
+    - name: Display verification output
+      ansible.builtin.debug:
+        var: showout.stdout_lines
