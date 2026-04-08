@@ -24,7 +24,6 @@
     - name: Configure SNMP view
       cisco.ios.ios_config:
         lines:
-          - snmp-server enable
           - snmp-server view {{ snmp_view }} iso included
 
     - name: Configure SNMP group
