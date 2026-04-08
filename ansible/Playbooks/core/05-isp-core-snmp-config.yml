@@ -8,6 +8,8 @@
     snmp_view: SNMP-RO
     snmp_group: SNMPv3-RO
     snmp_user: snmpuser
+    snmp_auth_pass: snmp@uthP@$$123
+    snmp_priv_pass: snmpPrivP@$$123
     snmp_location: EVE-NG-LAB
     snmp_contact: netops@lab.local
     snmp_nms_host: 10.10.116.8
