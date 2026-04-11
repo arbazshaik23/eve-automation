@@ -8,8 +8,8 @@
     snmp_view: SNMP-RO
     snmp_group: SNMPv3-RO
     snmp_user: snmpuser
-    snmp_auth_pass: snmp@uthP@$$123
-    snmp_priv_pass: snmpPrivP@$$123
+    snmp_auth_pass: {{ vault_snmp_auth_pass }}
+    snmp_priv_pass: {{ vault_snmp_priv_pass }}
     snmp_location: EVE-NG-LAB
     snmp_contact: netops@lab.local
     snmp_nms_host: 10.10.116.8
@@ -36,7 +36,7 @@
     - name: Create SNMP user
       cisco.ios.ios_config:
         lines:
-          - snmp-server user {{ snmp_user }} {{ snmp_group }} v3 auth sha {{ snmp_auth_pass }} priv aes 256 {{ snmp_priv_pass }}
+          - snmp-server user {{ snmp_user }} {{ snmp_group }} v3 auth sha {{ vault_snmp_auth_pass }} priv aes 256 {{ vault_snmp_priv_pass }}
 
     - name: Configure SNMP metadata
       cisco.ios.ios_config:
