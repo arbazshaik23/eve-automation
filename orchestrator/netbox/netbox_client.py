@@ -44,4 +44,7 @@ def create_interface(device, name):
 
 def create_ip(address, interface):
     """
-    NetBox 4.x:
+    NetBox 4.x compatibility notes:
+      - Does NOT accept prefix notation (e.g. /24) in the address field on create.
+      - Assignment must be a separate PATCH after creation.
+    """
