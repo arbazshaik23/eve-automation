@@ -1,17 +1,50 @@
 ---
-
-- name: Collect Interface Data
+- name: Collect Full Device Data - Juniper MX204
   hosts: vmx_bgp
   gather_facts: false
+  connection: ansible.netcommon.netconf
 
   tasks:
-    - name: Get Interfaces
+
+    - name: Get interface IPs
       juniper.device.junos_command:
         commands:
-          - show interfaces terse
-      register: output
+          - show interfaces terse | no-more
+      register: interfaces_terse
 
-    - name: Save Output Locally
-      copy:
-        content: "{{ output.stdout[0] }}"
-        dest: "/root/eve-automation/ansible/Netbox_Data/ {{ inventory_hostname }}.txt"
+    - name: Get hostname, model, serial, image
+      juniper.device.junos_command:
+        commands:
+          - show version | no-more
+      register: show_version
+
+    - name: Get BGP ASN and neighbors
+      juniper.device.junos_command:
+        commands:
+          - show bgp summary | no-more
+      register: bgp_summary
+
+    - name: Get VLANs / routing-instances / bridge domains
+      juniper.device.junos_command:
+        commands:
+          - show vlans | no-more
+      register: vlan_output
+      ignore_errors: true
+
+    - name: Get interface descriptions
+      juniper.device.junos_command:
+        commands:
+          - show interfaces descriptions | no-more
+      register: int_description
+
+    - name: Save all output to JSON file per device
+      ansible.builtin.copy:
+        content: "{{ {
+          'hostname': inventory_hostname,
+          'show_version': show_version.stdout[0],
+          'interfaces_terse': interfaces_terse.stdout[0],
+          'bgp_summary': bgp_summary.stdout[0],
+          'vlan_output': (vlan_output.stdout[0] if vlan_output is defined and vlan_output.stdout is defined else ''),
+          'int_description': int_description.stdout[0]
+        } | to_nice_json }}"
+        dest: "/root/eve-automation/ansible/Netbox_Data/{{ inventory_hostname }}.json"
