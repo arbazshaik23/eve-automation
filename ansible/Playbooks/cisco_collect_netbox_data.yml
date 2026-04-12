@@ -38,13 +38,13 @@
       register: int_description
 
     - name: Save all output to JSON file per device
-      copy:
+      ansible.builtin.copy:
         content: "{{ {
-          'hostname':        inventory_hostname,
-          'show_version':    show_version.stdout[0],
-          'ip_brief':        ip_brief.stdout[0],
-          'bgp_summary':     bgp_summary.stdout[0],
-          'vlan_brief':      vlan_brief.stdout[0] if vlan_brief is defined and vlan_brief.stdout is defined else ''),
+          'hostname': inventory_hostname,
+          'show_version': show_version.stdout[0],
+          'ip_brief': ip_brief.stdout[0],
+          'bgp_summary': bgp_summary.stdout[0],
+          'vlan_brief': vlan_brief.stdout[0],
           'int_description': int_description.stdout[0]
         } | to_nice_json }}"
         dest: "/root/eve-automation/ansible/Netbox_Data/{{ inventory_hostname }}.json"
