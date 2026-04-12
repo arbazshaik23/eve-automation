@@ -1,8 +1,0 @@
-Interface              IP-Address      OK? Method Status                Protocol
-GigabitEthernet1       10.10.34.3      YES manual up                    up      
-GigabitEthernet2       10.10.13.3      YES manual up                    up      
-GigabitEthernet3       10.10.24.3      YES manual up                    up      
-GigabitEthernet4       31.31.31.3      YES manual up                    up      
-GigabitEthernet5       10.10.116.23    YES manual up                    up      
-GigabitEthernet6       unassigned      YES unset  administratively down down    
-Loopback0              3.3.3.3         YES manual up                    up
