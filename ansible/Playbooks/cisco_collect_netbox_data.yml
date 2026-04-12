@@ -37,14 +37,17 @@
           - show interfaces description
       register: int_description
 
+    - name: Build JSON payload
+      ansible.builtin.set_fact:
+        device_data:
+          hostname: "{{ inventory_hostname }}"
+          show_version: "{{ show_version.stdout[0] }}"
+          ip_brief: "{{ ip_brief.stdout[0] }}"
+          bgp_summary: "{{ bgp_summary.stdout[0] }}"
+          vlan_brief: "{{ vlan_brief.stdout[0] }}"
+          int_description: "{{ int_description.stdout[0] }}"
+
     - name: Save all output to JSON file per device
       ansible.builtin.copy:
-        content: "{{ {
-          'hostname': inventory_hostname,
-          'show_version': show_version.stdout[0],
-          'ip_brief': ip_brief.stdout[0],
-          'bgp_summary': bgp_summary.stdout[0],
-          'vlan_brief': vlan_brief.stdout[0],
-          'int_description': int_description.stdout[0]
-        } | to_nice_json }}"
+        content: "{{ device_data | to_nice_json }}"
         dest: "/root/eve-automation/ansible/Netbox_Data/{{ inventory_hostname }}.json"
