@@ -1,18 +1,49 @@
----
-
-- name: Collect Interface Data
+# collect_device_data.yml
+- name: Collect Full Device Data
   hosts: isp_core_routers
   gather_facts: false
   connection: network_cli
 
   tasks:
-    - name: Get Interfaces
+
+    - name: Get interface IPs
       cisco.ios.ios_command:
         commands:
           - show ip interface brief
-      register: output
+      register: ip_brief
 
-    - name: Save Output Locally
+    - name: Get hostname, model, serial, image (show version)
+      cisco.ios.ios_command:
+        commands:
+          - show version
+      register: show_version
+
+    - name: Get BGP ASN and neighbors
+      cisco.ios.ios_command:
+        commands:
+          - show ip bgp summary
+      register: bgp_summary
+
+    - name: Get VLANs
+      cisco.ios.ios_command:
+        commands:
+          - show vlan brief
+      register: vlan_brief
+
+    - name: Get interface descriptions (for circuit parsing)
+      cisco.ios.ios_command:
+        commands:
+          - show interfaces description
+      register: int_description
+
+    - name: Save all output to JSON file per device
       copy:
-        content: "{{ output.stdout[0] }}"
-        dest: "/root/eve-automation/ansible/{{ inventory_hostname }}.txt"
+        content: "{{ {
+          'hostname':        inventory_hostname,
+          'show_version':    show_version.stdout[0],
+          'ip_brief':        ip_brief.stdout[0],
+          'bgp_summary':     bgp_summary.stdout[0],
+          'vlan_brief':      vlan_brief.stdout[0],
+          'int_description': int_description.stdout[0]
+        } | to_nice_json }}"
+        dest: "/root/eve-automation/ansible/Netbox_Data/{{ inventory_hostname }}.json"
