@@ -1,18 +1,17 @@
-# collect_device_data.yml
+---
 - name: Collect Full Device Data
   hosts: isp_core_routers
   gather_facts: false
   connection: network_cli
 
   tasks:
-
     - name: Get interface IPs
       cisco.ios.ios_command:
         commands:
           - show ip interface brief
       register: ip_brief
 
-    - name: Get hostname, model, serial, image (show version)
+    - name: Get hostname, model, serial, image
       cisco.ios.ios_command:
         commands:
           - show version
@@ -24,14 +23,7 @@
           - show ip bgp summary
       register: bgp_summary
 
-    - name: Get VLANs
-      cisco.ios.ios_command:
-        commands:
-          - show vlan brief
-      register: vlan_brief
-      ignore_errors: true
-
-    - name: Get interface descriptions (for circuit parsing)
+    - name: Get interface descriptions
       cisco.ios.ios_command:
         commands:
           - show interfaces description
@@ -41,11 +33,10 @@
       ansible.builtin.set_fact:
         device_data:
           hostname: "{{ inventory_hostname }}"
-          show_version: "{{ show_version.stdout[0] }}"
-          ip_brief: "{{ ip_brief.stdout[0] }}"
-          bgp_summary: "{{ bgp_summary.stdout[0] }}"
-          vlan_brief: "{{ vlan_brief.stdout[0] }}"
-          int_description: "{{ int_description.stdout[0] }}"
+          show_version: "{{ show_version.stdout[0] if show_version.stdout is defined else '' }}"
+          ip_brief: "{{ ip_brief.stdout[0] if ip_brief.stdout is defined else '' }}"
+          bgp_summary: "{{ bgp_summary.stdout[0] if bgp_summary.stdout is defined else '' }}"
+          int_description: "{{ int_description.stdout[0] if int_description.stdout is defined else '' }}"
 
     - name: Save all output to JSON file per device
       ansible.builtin.copy:
