@@ -135,20 +135,6 @@ def create_ip(address, interface):
     return ip
 
 
-# ── VLAN ─────────────────────────────────────────────────────────────
-
-def get_or_create_vlan(vlan_id, name, site):
-    vlan = nb.ipam.vlans.get(vid=vlan_id, site_id=site.id)
-    if not vlan:
-        vlan = nb.ipam.vlans.create({
-            "vid":  vlan_id,
-            "name": name,
-            "site": site.id
-        })
-        print(f"  Created VLAN {vlan_id} — {name}")
-    return vlan
-
-
 # ── CIRCUIT ──────────────────────────────────────────────────────────
 
 def get_or_create_provider(name):

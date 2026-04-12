@@ -50,23 +50,6 @@ def parse_bgp_summary(raw):
     return m.group(1) if m else ""
 
 
-def parse_vlan_brief(raw):
-    """
-    Extract VLANs from 'show vlan brief'.
-    Returns list of dicts: [{"id": 10, "name": "MGMT"}, ...]
-    Skips default VLANs 1, 1002-1005.
-    """
-    vlans = []
-    skip  = {1, 1002, 1003, 1004, 1005}
-    for line in raw.splitlines():
-        m = re.match(r'^(\d+)\s+(\S+)\s+active', line)
-        if m:
-            vid = int(m.group(1))
-            if vid not in skip:
-                vlans.append({"id": vid, "name": m.group(2)})
-    return vlans
-
-
 def parse_interface_descriptions(raw):
     """
     Extract interface name and description from 'show interfaces description'.
@@ -168,12 +151,6 @@ def sync_device(data, site):
     if bgp_asn:
         print(f"  BGP ASN  : {bgp_asn}")
         set_custom_field(device, "bgp_asn", bgp_asn)
-
-    # 5. Sync VLANs
-    vlans = parse_vlan_brief(data["vlan_brief"])
-    for vlan in vlans:
-        get_or_create_vlan(vlan["id"], vlan["name"], site)
-        print(f"  VLAN     : {vlan['id']} — {vlan['name']}")
 
     # 6. Parse interface descriptions for circuits
     descriptions = parse_interface_descriptions(data["int_description"])
