@@ -1,7 +1,6 @@
 - name: Test Palo Alto connectivity
   hosts: paloalto_fw
   gather_facts: false
-
   tasks:
     - name: Get system info
       paloaltonetworks.panos.panos_op:
@@ -12,6 +11,18 @@
         cmd: "show system info"
       register: result
 
-    - name: Show output
+    - name: Parse system info
+      ansible.builtin.set_fact:
+        sys_info: "{{ (result.stdout | from_json).response.result.system }}"
+
+    - name: Show system info
       ansible.builtin.debug:
-        var: result.stdout
+        msg:
+          - "Hostname:    {{ sys_info.hostname }}"
+          - "Model:       {{ sys_info.model }}"
+          - "SW Version:  {{ sys_info['sw-version'] }}"
+          - "IP Address:  {{ sys_info['ip-address'] }}"
+          - "Gateway:     {{ sys_info['default-gateway'] }}"
+          - "Uptime:      {{ sys_info.uptime }}"
+          - "VM Mode:     {{ sys_info['vm-mode'] }}"
+          - "App Version: {{ sys_info['app-version'] }}"
