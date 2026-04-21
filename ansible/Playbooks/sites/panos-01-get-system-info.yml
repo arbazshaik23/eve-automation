@@ -5,9 +5,13 @@
   tasks:
     - name: Get system info
       paloaltonetworks.panos.panos_op:
+        provider:
+          ip_address: "{{ ansible_host }}"
+          username: "{{ ansible_user }}"
+          password: "{{ ansible_password }}"
         cmd: "show system info"
       register: result
 
     - name: Show output
-      debug:
+      ansible.builtin.debug:
         var: result.stdout
